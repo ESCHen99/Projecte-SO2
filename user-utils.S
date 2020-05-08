@@ -49,6 +49,14 @@ ENTRY(gettime)
 	popl %ebp
 	ret
 
+/* int alloc_page */
+ENTRY(alloc_page)
+	pushl %ebp
+	movl %esp, %ebp
+	movl $11, %eax
+	call syscall_sysenter
+	popl %ebp
+	ret
 
 /* char get_key(char *c)*/
 ENTRY(get_key)

@@ -10,9 +10,12 @@
 /** Screen functions **/
 /**********************/
 
+
+
 Byte inb (unsigned short port);
 void printc(char c);
 void printc_xy(Byte x, Byte y, char c);
 void printk(char *string);
+void internal_put_screen(char* s);
 
 #endif  /* __IO_H__ */

@@ -1,0 +1,28 @@
+1-
+	S'ha implementat de forma rudimentària Els primers dos nivells:
+		1- get_key(char* c) i put_screen(char* s)
+		2- La primera funció s'ha implementat un Buffer_circular de 50 elements.
+		3- S'ha de fer un volcat a la pantalla a partir dels caràcters d's i s'ha
+			 aconseguit un fps màxim de ~400FPS.
+		4- S'ha implementat el "cutre system" per donar accés a memòria dinàmica a l'usuari.
+			 El sistema proporcionat afegeix un atribut al task_struct que compta la quantitat
+			 de pàgines extra, contigus, que s'han assignat. La funció es diu alloc_page()
+			 i retorna un punter void a l'inici de la pàgina.
+2-
+	Decisions que nous després del document de disseny:
+		1- Implementaré les syscall que es proposa al document de proposta en comptes
+			 de generalitzar el sistema genèric.
+		2- set_fps(int fps) se li afegirà el nice(int val) com a atribut al task_struct 
+			 i es canviarà la cua de processos ready per una cua de prioritats.
+3-
+	Com que el document de disseny no complia, s'ha redissenyat tot.
+4-
+	1- get_key: Ja hi ha buffer circular pel teclat. TODO: falta que retorni ERROR i/o
+							bloquejar el procés. (Nova cua pel scheduler.)
+							Hi ha una latència considerable però no sé si és el simulador o pel
+							codi Kernel.
+	2- put_screen: Penso que està prou desenvolupada. Mostra els FPS i el maxim d'FPS 
+								 supera el màxim en una pantalla d'ordinador.
+	3- alloc_page: És rudimentari, si l'objectiu és poder generar pantalles de forma
+								 dinàmica és fàcilment millorable. Ara per ara no podem alliberar espai.
+

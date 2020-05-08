@@ -7,9 +7,12 @@
 
 #include <types.h>
 
+#define KEY_BUFF_SIZE 50 
 #define IDT_ENTRIES 256
 
-char key;
+char key[KEY_BUFF_SIZE];
+int head;
+int tail;
 
 extern Gate idt[IDT_ENTRIES];
 extern Register idtR;

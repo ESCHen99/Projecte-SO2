@@ -48,10 +48,11 @@ int sys_ni_syscall()
 
 
 int sys_get_key(char* c){
-  if(key == 0 && (*c = 0)) return -1;
-  else{
-    *c = key;
-    key = 0;
+  if(head == tail && (*c = 0)) return -1;
+  {
+    *c = key[head];
+		key[head] = 0;
+    head = (head + 1)%KEY_BUFF_SIZE;
   }
 }
 
@@ -83,7 +84,6 @@ int sys_fork(void)
   
   /* Copy the parent's task struct to child's */
   copy_data(current(), uchild, sizeof(union task_union));
-  
   /* new pages dir */
   allocate_DIR((struct task_struct*)uchild);
   
@@ -251,27 +251,24 @@ int sys_get_stats(int pid, struct stats *st)
 
 
 int sys_put_screen(char *s){	
+
 	if(putscreen == 0){  tick = zeos_ticks; ++putscreen;}
 	if((zeos_ticks - tick) < 18){
 	 ++putscreen;
 	}
 	else{
-		*(s) = putscreen/100%10 + '0';
-		*(s + 1) =  putscreen/10%10 + '0';
-		*(s+2) =  putscreen%10 + '0';
+		*(s + 4) = putscreen/100%10 + '0';
+		*(s + 5) = putscreen/10%10 + '0';
+		*(s + 6) = putscreen%10 + '0';
 	  tick = zeos_ticks;
+		putscreen = 0;
 	} 
- // for(int i = 0; i < 80; i+=2){
-    for(int j = 80; j < 25 * 80; j+=2){
-//    Word ch = (Word) (s[i][j] & 0x00FF) | 0x0200;
-  //  DWord screen = 0xb8000 + (j * 80 + i) * 2;
-    // asm("movw %0, (%1)" : : "g"(ch), "g"(screen));
-
-
-      DWord ch = (DWord) ((0x00000000 | (*(s+j+1)))<<16  ) | *(s+j) | 0x02000200;
-      DWord screen = (DWord) 0xb8000 + (j) * 2;
-      asm("movl %0, (%1)" : : "g"(ch), "g"(screen));
-    }        
-  //}        
+	internal_put_screen(s);
 }
 
+void* sys_alloc_page(){
+	int new_frame = alloc_frame();
+	set_ss_pag(get_PT(current()), PAG_LOG_INIT_DATA + NUM_PAG_DATA + current() -> last_frame, new_frame
+);
+	return L_USER_START + (NUM_PAG_CODE + NUM_PAG_DATA + (current() -> last_frame)++)*0x1000;
+}

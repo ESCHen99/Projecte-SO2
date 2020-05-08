@@ -37,22 +37,20 @@ void clock_routine()
 {
   zeos_show_clock();
   zeos_ticks ++;
-  
   schedule();
 }
 
-char key;
 
 void keyboard_routine()
 {
   unsigned char c = inb(0x60);
   
-  if (c&0x80){
-    printc_xy(0, 0, char_map[c&0x7f]);
-    if(key == 0){
-      key = char_map[c&0x7f];
-      sys_write(1, key, 1);
-    }
+  if (c & 0x80){
+    //printc_xy(0, 0, char_map[c&0x7f]);
+		if(key[tail] == 0){
+     	key[tail] = char_map[c & 0x7f];
+			tail = (tail + 1)%KEY_BUFF_SIZE;
+		}
   }
 }
 
@@ -115,7 +113,9 @@ void setSysenter()
 
 void setIdt()
 {
-  key = 0;
+  head = 0;
+	tail = 0;
+	for(int i = 0; i < KEY_BUFF_SIZE; ++i) key[i] = 0;
   /* Program interrups/exception service routines */
   idtR.base  = (DWord)idt;
   idtR.limit = IDT_ENTRIES * sizeof(Gate) - 1;

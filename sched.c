@@ -168,6 +168,7 @@ void init_idle (void)
 
   c->total_quantum=DEFAULT_QUANTUM;
 
+	c -> last_frame = 0;
   init_stats(&c->p_stats);
 
   allocate_DIR(c);
@@ -195,6 +196,7 @@ void init_task1(void)
 
   c->state=ST_RUN;
 
+	c -> last_frame = 0;
   remaining_quantum=c->total_quantum;
 
   init_stats(&c->p_stats);

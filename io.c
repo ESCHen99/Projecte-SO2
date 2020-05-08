@@ -63,3 +63,15 @@ void printk(char *string)
   for (i = 0; string[i]; i++)
     printc(string[i]);
 }
+
+
+
+void internal_put_screen(char* s){
+	for(int j = 0; j < 25 * 80; j+=2){
+      DWord ch = (DWord) ((0x00000000 | (*(s+j+1)))<<16  ) | *(s+j) | 0x02000200;
+      DWord screen = (DWord) 0xb8000 + (j) * 2;
+      asm("movl %0, (%1)" : : "g"(ch), "g"(screen));
+  }
+}
+
+
