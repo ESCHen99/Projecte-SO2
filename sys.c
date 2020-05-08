@@ -268,7 +268,6 @@ int sys_put_screen(char *s){
 
 void* sys_alloc_page(){
 	int new_frame = alloc_frame();
-	set_ss_pag(get_PT(current()), PAG_LOG_INIT_DATA + NUM_PAG_DATA + current() -> last_frame, new_frame
-);
+	set_ss_pag(get_PT(current()), PAG_LOG_INIT_DATA + NUM_PAG_DATA + current() -> last_frame, new_frame);
 	return L_USER_START + (NUM_PAG_CODE + NUM_PAG_DATA + (current() -> last_frame)++)*0x1000;
 }
