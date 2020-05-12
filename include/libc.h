@@ -14,6 +14,8 @@ int write(int fd, char *buffer, int size);
 
 void itoa(int a, char *b);
 
+void addr(unsigned int a, char* b);
+
 int strlen(char *a);
 
 int get_key(char *c);

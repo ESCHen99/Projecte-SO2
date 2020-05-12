@@ -8,6 +8,25 @@
 
 int errno;
 
+
+char get_char(unsigned int i){
+	if(i > 9) return i - 10 + 'A';
+	return i+'0';
+}
+
+void inner_addr(unsigned int a, char* b, int i){
+	if(a < 16) b[i] = get_char(a);
+	else{
+		inner_addr(a/16, b, i - 1);
+		b[i] = get_char(a%16);
+	}
+}
+
+
+void addr(unsigned int a, char* b){
+	inner_addr(a, b, 7);
+}
+
 void itoa(int a, char *b)
 {
   int i, i1;
