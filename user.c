@@ -30,16 +30,32 @@ void right(struct pair* p){
 
 void test_nivell2(){
 
-	int* a = alloc_page();
+	char *a = bakabaka_malloc();//alloc_page();
+	char *b = bakabaka_malloc();
+	char *c = bakabaka_malloc();
+	char *d = bakabaka_malloc();
 	char aux[8] = {'0', '0', '0', '0', '0', '0', '0', '0'};
-	addr(&a, &aux[0]);
+	addr(a+1, &aux[0]);
 	write(1, aux, 8);
-	for(int i = 0; i < 25*80; ++i){ 
-		a[i] = i%10 + '0';
-		addr(&a[i], &aux[0]);
-		write(1, aux, 8);
+//	*(a+1) = 'a';
+	for(int i = 80; i < 25*80; ++i){ 
+		*(a + i) = 'A';
+	//	addr(&a[i], &aux[0]);
+//		write(1, aux, 8);
 	}
+	for(int i = 80; i < 25*80; ++i) *(c + i) = 'C';
+	for(int i = 80; i < 25*80; ++i) *(b + i) = 'B';
+	for(int i = 80; i < 25*80; ++i) *(d + i) = 'D';
 	put_screen(a);
+	bakabaka_free(a);
+	put_screen(a);
+	addr(c, &aux[0]);
+	write(1, aux, 8);
+	addr(b, &aux[0]);
+	write(1, aux, 8);
+	addr(a, &aux[0]);
+	write(1, aux, 8);
+
 }
 
 void test_nivell1(struct pair* p){
@@ -90,8 +106,8 @@ int __attribute__ ((__section__(".text.main")))
   p.y = 1;
 
 	put_screen(&s[0][0]);
-test_nivell2();  
-while(1) {
+	test_nivell2();  
+	while(1) {
 //		test_nivell1(&p);
 //		test_nivell2();
     }
