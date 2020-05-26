@@ -24,7 +24,7 @@ struct task_struct {
   enum state_t state;		/* State of the process */
   int total_quantum;		/* Total quantum of the process */
   struct stats p_stats;		/* Process stats */
-	unsigned int last_frame;
+	unsigned int last_frame; // No és la millor solució només deixa eliminar espais de forma LIFO
 };
 
 union task_union {
