@@ -25,6 +25,7 @@ struct task_struct {
   int total_quantum;		/* Total quantum of the process */
   struct stats p_stats;		/* Process stats */
 	unsigned int last_frame; // No és la millor solució només deixa eliminar espais de forma LIFO
+	int nice;
 };
 
 union task_union {
