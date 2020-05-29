@@ -9,8 +9,8 @@ ENTRY (sys_call_table)
 	.long sys_write		//4
 	.long sys_get_key	//5
 	.long sys_put_screen	//6
-	.long sys_ni_syscall	//7
-	.long sys_ni_syscall	//8
+	.long sys_nice	//7
+	.long sys_getnice	//8
 	.long sys_ni_syscall	//9
 	.long sys_gettime	//10
 	.long sys_alloc_page	//11

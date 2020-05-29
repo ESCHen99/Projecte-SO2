@@ -75,12 +75,14 @@ void perror()
 // PRE: bakabaka_malloc_binning is not NULL
 void* bakabaka_malloc_pop_front(){
   void* aux = bakabaka_malloc_binning;
-	bakabaka_malloc_binning = (void*) *((int*) aux); // binning to next of the frame
+	if(bakabaka_malloc_binning != NULL)
+		bakabaka_malloc_binning = (void*) *((int*) aux); // binning to next of the frame
+	else bakabaka_malloc_binning = NULL;
 	return aux;
 }
 
 void init_bakabaka(){
-	bakabaka_malloc_binning = 'M';
+	bakabaka_malloc_binning = NULL;
 }
 
 void* bakabaka_malloc(){

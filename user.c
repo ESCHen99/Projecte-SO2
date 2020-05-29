@@ -29,19 +29,37 @@ void right(struct pair* p){
 
 
 void test_nivell2(){
+init_bakabaka();	
+	nice(50);	
+	char buff2[256];
+	itoa(getnice(), &buff2[0]);
+//	write(1, buff2, strlen(buff2));
 
 	char *a = bakabaka_malloc();//alloc_page();
+	if(fork() == 0){
+		nice(2);
+		char buff[256];
+		itoa(getnice(), &buff[0]);
+	//	for(int i = 0; i < 1e7; ++i){write(1, buff, strlen(buff));}
+		exit();
+	}
+	else{
+//		*(a + 1) = 'X'	;
+		perror();
+	}
+//	char *a = bakabaka_malloc();//alloc_page();
+
 	char *b = bakabaka_malloc();
 	char *c = bakabaka_malloc();
 	char *d = bakabaka_malloc();
 	char aux[8] = {'0', '0', '0', '0', '0', '0', '0', '0'};
 	addr(a+1, &aux[0]);
 	write(1, aux, 8);
-//	*(a+1) = 'a';
+	*(a+1) = 'a';
 	for(int i = 80; i < 25*80; ++i){ 
 		*(a + i) = 'A';
-	//	addr(&a[i], &aux[0]);
-//		write(1, aux, 8);
+		addr(&a[i], &aux[0]);
+		write(1, aux, 8);
 	}
 	for(int i = 80; i < 25*80; ++i) *(c + i) = 'C';
 	for(int i = 80; i < 25*80; ++i) *(b + i) = 'B';
@@ -59,6 +77,7 @@ void test_nivell2(){
 }
 
 void test_nivell1(struct pair* p){
+		nice(0);
 	  struct pair pp = *p;
     char c = 0;
     get_key(&c);

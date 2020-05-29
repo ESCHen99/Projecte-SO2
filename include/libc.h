@@ -36,6 +36,7 @@ int get_stats(int pid, struct stats *st);
 
 int put_screen(char s[80][25]);
 
+int nice(int val);
 
 void init_bakabaka();
 
@@ -49,4 +50,5 @@ void* bakabaka_malloc();
 
 void bakabaka_free(void* addr);
 
+int getnice();
 #endif  /* __LIBC_H__ */

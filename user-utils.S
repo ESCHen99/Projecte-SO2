@@ -78,6 +78,26 @@ ENTRY(put_screen)
 	popl %ebp
 	ret
 
+/* int getnice() */
+ENTRY(getnice)
+	pushl %ebp
+	movl %esp, %ebp
+	movl $8, %eax
+	call syscall_sysenter
+	popl %ebp
+	ret
+
+
+/* int put_screen(char *s)*/
+ENTRY(nice)
+	pushl %ebp
+	movl %esp, %ebp
+  movl 0x8(%ebp), %ebx
+	movl $7, %eax
+	call syscall_sysenter
+	popl %ebp
+	ret
+
 /* int getpid() */
 ENTRY(getpid)
 	pushl %ebp
