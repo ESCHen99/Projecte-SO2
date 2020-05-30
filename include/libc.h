@@ -10,7 +10,7 @@
 
 extern int errno;
 
-void* bakabaka_malloc_binning;
+extern void* bakabaka_malloc_binning;
 
 int write(int fd, char *buffer, int size);
 
@@ -39,12 +39,6 @@ int put_screen(char s[80][25]);
 int nice(int val);
 
 void init_bakabaka();
-
-void* bakabaka_malloc_pop_front();
-
-void* bakabaka_malloc();
-
-void bakabaka_malloc_push(void* addr);
 
 void* bakabaka_malloc();
 

@@ -47,14 +47,7 @@ int sys_ni_syscall()
 }
 
 
-int sys_get_key(char* c){
-  if(head == tail && (*c = 0)) return -1;
-  {
-    *c = key[head];
-		key[head] = 0;
-    head = (head + 1)%KEY_BUFF_SIZE;
-  }
-}
+
 
 int sys_getpid()
 {
@@ -184,6 +177,7 @@ int sys_fork(void)
   /* Queue child process into readyqueue */
   uchild->task.state=ST_READY;
   list_add_tail(&(uchild->task.list), &readyqueue);
+	push(&readypqueue, uchild);
   
   return uchild->task.PID;
 }
@@ -277,9 +271,26 @@ int sys_get_stats(int pid, struct stats *st)
 }
 
 
+int basic_access_ok(void* p){
+	unsigned long addr_ini; 
+	addr_ini=(((unsigned long)p)>>12);
+	if ((addr_ini>=USER_FIRST_PAGE+NUM_PAG_CODE) && (addr_ini<=USER_FIRST_PAGE+NUM_PAG_CODE+NUM_PAG_DATA + current() -> last_frame))
+	  return 1;
+	else return 0;
+}
+
+int sys_get_key(char* c){
+	if(!basic_access_ok(c)) return -EFAULT;
+  if(head == tail) return -EAGAIN;
+  {
+    *c = key[head];
+		key[head] = 0;
+    head = (head + 1)%KEY_BUFF_SIZE;
+  }
+}
 
 int sys_put_screen(char *s){	
-
+	if(!basic_access_ok(s)) return -EFAULT;
 	if(putscreen == 0){  tick = zeos_ticks; ++putscreen;}
 	if((zeos_ticks - tick) < 18){
 	 ++putscreen;
@@ -296,12 +307,13 @@ int sys_put_screen(char *s){
 
 void* sys_alloc_page(){
 	int new_frame = alloc_frame();
-	if(new_frame == -1) printk("Alloc page failed");
+	if(new_frame == -1) return -EAGAIN; 
 	else	set_ss_pag(get_PT(current()), PAG_LOG_INIT_DATA + NUM_PAG_DATA + current() -> last_frame, new_frame);
 	return (void *) ((int) (PAG_LOG_INIT_DATA + NUM_PAG_DATA + (current() -> last_frame)++)<<12);
 }
 
 int sys_nice(int val){
+	if(val < 0 || val > 1000) return -EAGAIN;
 	current() -> nice = val;
 }
 

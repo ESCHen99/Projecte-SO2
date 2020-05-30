@@ -27,9 +27,38 @@ void right(struct pair* p){
         if(p->x < 79) ++ p->x;
 }
 
+void test_nivell3(){
+	nice(1);
+	if(fork() == 0){
+		nice(0);
+		char buff[256] = "Fill";
+		for(int i = 0; i < 10000; ++i){
+			itoa(i, &buff[4]);
+			write(1, buff, strlen(buff));
+		}
+		for(int i = 0; i < 100000; ++i) write(1, buff, strlen(buff));
+		while(1);
+		exit();
+	}
+	else{
+		if(fork() == 0){
+			nice(500);
+			char buffAA[256] = "BUFAAA";
+			for(int i = 0; i < 2; ++i)			write(1, buffAA, strlen(buffAA));
+			exit();
+		}
+		char buff[256] = "Parent";
+		while(1);
+		for(int i = 0; i < 50; ++i){ // Si el nice funciona fins que el fill fa exit no hauria d'escriure
+			itoa(i, &buff[6]);
+			write(1, buff, strlen(buff));
+		}
+//		exit();
+	}
+}
 
 void test_nivell2(){
-init_bakabaka();	
+//init_bakabaka();	
 	nice(50);	
 	char buff2[256];
 	itoa(getnice(), &buff2[0]);
@@ -125,9 +154,10 @@ int __attribute__ ((__section__(".text.main")))
   p.y = 1;
 
 	put_screen(&s[0][0]);
-	test_nivell2();  
+//	test_nivell2();  
+//	test_nivell3();
 	while(1) {
-//		test_nivell1(&p);
+		test_nivell1(&p);
 //		test_nivell2();
-    }
+  }
 }

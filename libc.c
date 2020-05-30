@@ -8,7 +8,7 @@
 
 
 int errno;
-
+void* bakabaka_malloc_binning = NULL;
 
 char get_char(unsigned int i){
 	if(i > 9) return i - 10 + 'A';

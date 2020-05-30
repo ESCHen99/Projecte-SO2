@@ -9,6 +9,7 @@
 #include <types.h>
 #include <mm_address.h>
 #include <stats.h>
+#include <general_heap.h>
 
 
 #define NR_TASKS      10
@@ -44,7 +45,7 @@ extern struct task_struct *idle_task;
 
 extern struct list_head freequeue;
 extern struct list_head readyqueue;
-
+extern heap_struct readypqueue;
 /* Inicialitza les dades del proces inicial */
 void init_task1(void);
 

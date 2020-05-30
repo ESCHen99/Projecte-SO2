@@ -10,7 +10,7 @@
 #include <io.h>
 #include <utils.h>
 #include <p_stats.h>
-
+#include <general_heap.h>
 /**
  * Container for the Task array and 2 additional pages (the first and the last one)
  * to protect against out of bound accesses.
@@ -33,6 +33,13 @@ extern struct list_head blocked;
 struct list_head freequeue;
 // Ready queue
 struct list_head readyqueue;
+
+heap_struct readypqueue;
+
+
+int compare_task_structs(void* ts1, void* ts2){
+	return ((struct task_struct*) ts1) -> nice < ((struct task_struct*) ts2) -> nice;
+}
 
 void init_stats(struct stats *s)
 {
@@ -102,21 +109,24 @@ void update_sched_data_rr(void)
 
 int needs_sched_rr(void)
 {
-  if ((remaining_quantum==0)&&(!list_empty(&readyqueue)) && (!empty())) return 1;
+  if ((remaining_quantum==0)&& !empty(&readypqueue)/**(!list_empty(&readyqueue))*/) return 1;
   if (remaining_quantum==0) remaining_quantum=get_quantum(current());
   return 0;
 }
 
 void update_process_state_rr(struct task_struct *t, struct list_head *dst_queue)
 {
-  if (t->state!=ST_RUN) list_del(&(t->list));
+  if (t->state!=ST_RUN){
+		 list_del(&(t->list));
+		 if(t->state == ST_READY) pop(&readypqueue);
+	}
   if (dst_queue!=NULL)
   {
     list_add_tail(&(t->list), dst_queue);
     if (dst_queue!=&readyqueue) t->state=ST_BLOCKED;
     else
     {
-			push(t);
+			push(&readypqueue, t);
       update_stats(&(t->p_stats.system_ticks), &(t->p_stats.elapsed_total_ticks));
       t->state=ST_READY;
     }
@@ -129,12 +139,12 @@ void sched_next_rr(void)
   struct list_head *e;
   struct task_struct *t;
 
-  if (!list_empty(&readyqueue) && (!empty())) {
+  if (!empty(&readypqueue)/*!list_empty(&readyqueue)*/) {
 		e = list_first(&readyqueue);
     list_del(e);
-		e = head();
-		pop();
-    t=list_head_to_task_struct(e);
+		e = front(&readypqueue);
+		pop(&readypqueue);
+    t = e;//list_head_to_task_struct(e);
   }
   else
     t=idle_task;
@@ -230,7 +240,7 @@ void init_freequeue()
 void init_sched()
 {
   init_freequeue();
-	init_tasks_heap();
+	init_heap_struct(&readypqueue, compare_task_structs);
   INIT_LIST_HEAD(&readyqueue);
 }
 
@@ -269,3 +279,4 @@ void force_task_switch()
 
   sched_next_rr();
 }
+
